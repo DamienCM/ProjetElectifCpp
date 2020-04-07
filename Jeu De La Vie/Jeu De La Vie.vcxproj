@@ -160,6 +160,7 @@
     <ClCompile Include="Grille.cpp" />
     <ClCompile Include="Jeu De La Vie.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Jeu De La Vie.rc" />
@@ -172,6 +173,7 @@
     <Text Include="logCellule.txt" />
     <Text Include="logGrille.txt" />
     <Text Include="logMain.txt" />
+    <Text Include="logTest.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

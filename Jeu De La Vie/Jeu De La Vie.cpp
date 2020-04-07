@@ -9,11 +9,12 @@
 #define MAX_LOADSTRING 100
 
 // Variables globales :
-bool clickTriggered = false;
+bool clickGaucheTriggered = false;
+bool clickDroitTriggered = false;
 bool initialisation = true;
 bool variablecontrol = true;
 int x, y;
-Grille myGrille{ 50, 50 };
+Grille myGrille{ 100,50 };
 Log logMain{ "logMain.txt" };
 HINSTANCE hInst;                                // instance actuelle
 WCHAR szTitle[MAX_LOADSTRING];                  // Texte de la barre de titre
@@ -154,6 +155,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
 
+        case WM_RBUTTONDOWN: {
+            initialisation = false;
+            clickDroitTriggered = true;
+            if (clickDroitTriggered) {
+                myGrille.update(hWnd);
+            }
+        }
+        break;
+        case WM_RBUTTONUP: {
+            clickDroitTriggered = false;
+        }
+        break;
         case WM_LBUTTONDOWN:
         {   
             if (initialisation) {
@@ -166,14 +179,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 myGrille.paint(hWnd, x, y);
 
             }
-            clickTriggered = true;
+            clickGaucheTriggered = true;
 
         }
         break;
 
         case WM_LBUTTONUP: 
         {
-            clickTriggered = false;
+            clickGaucheTriggered = false;
         }
         break;        
         
@@ -197,7 +210,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         
         case WM_MOUSEMOVE: 
         {
-            if (clickTriggered && initialisation) {
+            if (clickGaucheTriggered && initialisation) {
                 if (myGrille.isAlive(x, y)) {
                     myGrille.kill(x, y);
                 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include "Log.h"
+#include <string>
 static HBRUSH brushNoir= CreateSolidBrush(RGB(0,0,0));
 static HBRUSH brushBlanc=CreateSolidBrush(RGB(255, 255, 255));
 static HPEN penNoir= CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
@@ -39,15 +40,19 @@ public:
 		if (alive) {
 			SelectObject (hdc, penBlanc);
 			SelectObject(hdc, brushBlanc);
-			logCellule.Info("BLANC");
 		}
 		else {
 			SelectObject(hdc, brushNoir);
 			SelectObject(hdc, penNoir);
-			logCellule.Warning("NOIR");
 		}
 		Rectangle(hdc, x * 10, y * 10, x * 10 + 10, y * 10 + 10);
 		ReleaseDC(hWnd, hdc);
+	}
+	bool copyState(Cellule cell) {
+		bool backup = alive;
+		alive = cell.isAlive();
+		logCellule.Error(std::to_string(cell.isAlive()).c_str());
+		return (alive != backup);
 	}
 };
 
