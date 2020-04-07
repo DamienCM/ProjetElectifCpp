@@ -10,9 +10,11 @@
 
 // Variables globales :
 bool clickTriggered = false;
+bool initialisation = true;
+bool variablecontrol = true;
 int x, y;
-Grille myGrille{ 20, 20 };
-Log myLog{ "logMain.txt" };
+Grille myGrille{ 50, 50 };
+Log logMain{ "logMain.txt" };
 HINSTANCE hInst;                                // instance actuelle
 WCHAR szTitle[MAX_LOADSTRING];                  // Texte de la barre de titre
 WCHAR szWindowClass[MAX_LOADSTRING];            // nom de la classe de fenêtre principale
@@ -129,61 +131,90 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    x = LOWORD(lParam);					//Store the current x 
-    y = HIWORD(lParam);
+    x = (int)LOWORD(lParam)/10;					//Store the current x 
+    y = (int)HIWORD(lParam)/10;
 
     switch (message)
     {
-    case WM_COMMAND:
-    {
-        int wmId = LOWORD(wParam);
-        // Analyse les sélections de menu :
-        switch (wmId)
+        case WM_COMMAND:
         {
-        case IDM_ABOUT:
-            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-            break;
-        case IDM_EXIT:
-            DestroyWindow(hWnd);
+            int wmId = LOWORD(wParam);
+            // Analyse les sélections de menu :
+            switch (wmId)
+            {
+            case IDM_ABOUT:
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+                break;
+            case IDM_EXIT:
+                DestroyWindow(hWnd);
+                break;
+            default:
+                return DefWindowProc(hWnd, message, wParam, lParam);
+            }
+        }
+        break;
+
+        case WM_LBUTTONDOWN:
+        {   
+            if (initialisation) {
+                if (myGrille.isAlive(x, y)) {
+                    myGrille.kill(x, y);
+                }
+                else {
+                    myGrille.resurrect(x, y);
+                }
+                myGrille.paint(hWnd, x, y);
+
+            }
+            clickTriggered = true;
+
+        }
+        break;
+
+        case WM_LBUTTONUP: 
+        {
+            clickTriggered = false;
+        }
+        break;        
+        
+        case WM_PAINT:
+        {   
+            if (variablecontrol) {
+                logMain.Error("Paint All déclenché !");
+                myGrille.paintAll(hWnd);
+                variablecontrol = false;
+            }
+            else {
+                PAINTSTRUCT ps;
+                HDC dc = BeginPaint(hWnd, &ps);
+
+                // do drawing to 'dc' here -- or don't
+                EndPaint(hWnd, &ps);
+            }
+        }
+        break;
+
+        
+        case WM_MOUSEMOVE: 
+        {
+            if (clickTriggered && initialisation) {
+                if (myGrille.isAlive(x, y)) {
+                    myGrille.kill(x, y);
+                }
+                else {
+                    myGrille.resurrect(x, y);
+                }
+                myGrille.paint(hWnd, x, y);
+
+            }
+        }
+        break;
+        
+        case WM_DESTROY:
+            PostQuitMessage(0);
             break;
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
-        }
-    }
-    break;
-
-
-    case WM_LBUTTONDOWN:
-    {
-        myLog.Info("Clikc pressed");
-        myGrille.kill(10, 10);
-        myGrille.paintAll(hWnd);
-        clickTriggered = true;
-
-    }
-    break;
-
-    case WM_LBUTTONUP: {
-        myLog.Info("Boutton reclaché");
-        clickTriggered = false;
-    }
-                     /*
-                     case WM_MOUSEMOVE: {
-                         if (clickTriggered) {
-                             paintCarre(hWnd, x, y);
-                         }
-                     }
-                     */
-    case WM_PAINT:
-    {
-        myGrille.paintAll(hWnd);
-    }
-    break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
 }

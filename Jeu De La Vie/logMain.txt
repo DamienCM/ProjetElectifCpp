@@ -1,5 +1,2 @@
 Debut du programme : 
-[Info] : Clikc pressed at time Tue Apr  7 17:36:40 2020
-[Info] : Boutton reclaché at time Tue Apr  7 17:36:41 2020
-[Info] : Clikc pressed at time Tue Apr  7 17:36:41 2020
-[Info] : Boutton reclaché at time Tue Apr  7 17:36:41 2020
+[Error] : Paint All déclenché ! at time Tue Apr  7 20:01:06 2020

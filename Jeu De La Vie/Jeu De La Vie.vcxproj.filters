@@ -64,4 +64,15 @@
       <Filter>Fichiers de ressources</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="logMain.txt">
+      <Filter>Fichiers de ressources</Filter>
+    </Text>
+    <Text Include="logCellule.txt">
+      <Filter>Fichiers de ressources</Filter>
+    </Text>
+    <Text Include="logGrille.txt">
+      <Filter>Fichiers de ressources</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

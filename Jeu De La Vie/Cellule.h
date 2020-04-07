@@ -1,5 +1,12 @@
 #pragma once
 #include <Windows.h>
+#include "Log.h"
+static HBRUSH brushNoir= CreateSolidBrush(RGB(0,0,0));
+static HBRUSH brushBlanc=CreateSolidBrush(RGB(255, 255, 255));
+static HPEN penNoir= CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+static HPEN penBlanc= CreatePen(PS_SOLID, 1, RGB(255,255,255));
+static Log logCellule{ "logCellule.txt" };
+
 class Cellule
 {
 public:
@@ -13,7 +20,8 @@ public:
 	Cellule(bool alive, int x, int y) {
 		this->x = x;
 		this->y = y;
-		this->alive = true;
+		this->alive = alive;
+
 	}
 	void kill() {
 		this->alive = false;
@@ -25,23 +33,21 @@ public:
 		return alive;
 	}
 	void paint(HWND hWnd) {
-		HBRUSH brush;
-		HPEN pen;
+
+		HDC hdc = GetDC(hWnd);
+
 		if (alive) {
-			brush = CreateSolidBrush(RGB(255, 255, 255));
-			pen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+			SelectObject (hdc, penBlanc);
+			SelectObject(hdc, brushBlanc);
+			logCellule.Info("BLANC");
 		}
 		else {
-			brush = CreateSolidBrush(RGB(0, 0, 0));
-			pen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+			SelectObject(hdc, brushNoir);
+			SelectObject(hdc, penNoir);
+			logCellule.Warning("NOIR");
 		}
-		HDC hdc = GetDC(hWnd);
-		SelectObject(hdc, brush);
-		SelectObject(hdc, pen);
 		Rectangle(hdc, x * 10, y * 10, x * 10 + 10, y * 10 + 10);
 		ReleaseDC(hWnd, hdc);
-		DeleteObject(brush);
-		DeleteObject(pen);
 	}
 };
 

@@ -2,6 +2,9 @@
 #include "Cellule.h"
 #include <vector>
 #include <Windows.h>
+#include "Log.h"
+
+static Log logGrille{ "logGrille.txt" };
 
 class Grille
 {
@@ -18,13 +21,14 @@ public:
 		for (int i = 0; i < x; i++) {
 			std::vector<Cellule> temp;
 			for (int j = 0; j < x; j++) {
-				temp.push_back(Cellule{ false,i,j });
+				temp.push_back(Cellule{ false,i,j});
 			}
 			myArray.push_back(temp);
 		}
 	}
 
 	void paintAll(HWND hWnd) {
+		logGrille.Error("paintAll");
 		for (int i = 0; i < x; i++) {
 			for (int j = 0; j < x; j++) {
 				myArray[i][j].paint(hWnd);
