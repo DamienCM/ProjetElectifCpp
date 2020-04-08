@@ -5,10 +5,14 @@
 #include "Jeu De La Vie.h"
 #include "Log.h"
 #include "Grille.h"
+#include <thread>
 
 #define MAX_LOADSTRING 100
 
 // Variables globales :
+std::thread myThread;
+bool displayMode = false;
+bool threadActive;
 bool clickGaucheTriggered = false;
 bool clickDroitTriggered = false;
 bool initialisation = true;
@@ -25,6 +29,8 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+void periodicFunction(HWND hWnd);
+
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -50,14 +56,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_JEUDELAVIE));
 
     MSG msg;
-
+    
     // Boucle de messages principale :
+
     while (GetMessage(&msg, nullptr, 0, 0))
     {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
         {
+ 
             TranslateMessage(&msg);
             DispatchMessage(&msg);
+            
         }
     }
 
@@ -132,6 +141,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+
     x = (int)LOWORD(lParam)/10;					//Store the current x 
     y = (int)HIWORD(lParam)/10;
 
@@ -158,9 +168,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_RBUTTONDOWN: {
             initialisation = false;
             clickDroitTriggered = true;
-            if (clickDroitTriggered) {
-                myGrille.update(hWnd);
-            }
+            displayMode = !displayMode;
+
         }
         break;
         case WM_RBUTTONUP: {
@@ -229,7 +238,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
     }
+
+    if (displayMode && !threadActive) {
+        myThread=std::thread(periodicFunction, hWnd);
+        threadActive = true;
+        logMain.Error("Thread lancé");
+    }
+    else if (displayMode && threadActive) {
+
+    }
+    else {
+        try {
+            logMain.Error("thread joineds");
+            myThread.join();
+            threadActive = false;
+        }
+        catch(std::exception){
+        }
+    }
     return 0;
+
 }
 // Gestionnaire de messages pour la boîte de dialogue À propos de.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -249,4 +277,14 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+
+
+void periodicFunction(HWND hWnd) {
+    while (displayMode)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(150));
+        myGrille.update(hWnd);
+        logMain.Error("error no update");
+    }
 }

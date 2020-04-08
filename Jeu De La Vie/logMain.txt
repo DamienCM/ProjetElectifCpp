@@ -1,2 +1,0 @@
-Debut du programme : 
-[Error] : Paint All déclenché ! at time Tue Apr  7 23:47:52 2020
