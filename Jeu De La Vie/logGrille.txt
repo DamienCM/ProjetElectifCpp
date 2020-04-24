@@ -1,0 +1,2 @@
+Debut du programme : 
+[Error] : paintAll at time Sat Apr 18 12:52:57 2020

@@ -1,6 +1,7 @@
 ﻿  Cellule.cpp
   Grille.cpp
   Jeu De La Vie.cpp
+  Log.cpp
   test.cpp
   Génération de code en cours...
   Jeu De La Vie.vcxproj -> C:\dev\c++\projetElectif\Jeu De La Vie\Debug\Jeu De La Vie.exe

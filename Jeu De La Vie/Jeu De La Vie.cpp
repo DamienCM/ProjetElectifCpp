@@ -1,5 +1,5 @@
 // Jeu De La Vie.cpp : Définit le point d'entrée de l'application.
-//
+//qwhejeqwjheqwhjqgwejhqewg
 
 #include "framework.h"
 #include "Jeu De La Vie.h"
@@ -18,7 +18,7 @@ bool clickDroitTriggered = false;
 bool initialisation = true;
 bool variablecontrol = true;
 int x, y;
-Grille myGrille{ 100,50 };
+Grille myGrille{ 200,50 };
 Log logMain{ "logMain.txt" };
 HINSTANCE hInst;                                // instance actuelle
 WCHAR szTitle[MAX_LOADSTRING];                  // Texte de la barre de titre
@@ -169,6 +169,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             initialisation = false;
             clickDroitTriggered = true;
             displayMode = !displayMode;
+            if (!displayMode)
+                initialisation = !initialisation;
 
         }
         break;
@@ -201,18 +203,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         
         case WM_PAINT:
         {   
-            if (variablecontrol) {
-                logMain.Error("Paint All déclenché !");
-                myGrille.paintAll(hWnd);
-                variablecontrol = false;
-            }
-            else {
-                PAINTSTRUCT ps;
-                HDC dc = BeginPaint(hWnd, &ps);
+            PAINTSTRUCT ps;
+            HDC dc = BeginPaint(hWnd, &ps);
 
-                // do drawing to 'dc' here -- or don't
-                EndPaint(hWnd, &ps);
-            }
+            myGrille.paintAll(hWnd);
+
+            EndPaint(hWnd, &ps); logMain.Error("PaintAll");
+      
         }
         break;
 
@@ -233,7 +230,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
         
         case WM_DESTROY:
-            PostQuitMessage(0);
+            try {
+                displayMode = false;
+                myThread.join();
+            }
+            catch (std::exception) {
+
+            }
+                PostQuitMessage(0);
             break;
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -249,7 +253,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     else {
         try {
-            logMain.Error("thread joineds");
             myThread.join();
             threadActive = false;
         }
