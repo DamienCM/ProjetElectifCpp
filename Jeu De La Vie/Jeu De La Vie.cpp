@@ -18,7 +18,7 @@ bool clickDroitTriggered = false;
 bool initialisation = true;
 bool variablecontrol = true;
 int x, y;
-Grille myGrille{ 200,50 };
+Grille myGrille{ 200,100 };
 Log logMain{ "logMain.txt" };
 HINSTANCE hInst;                                // instance actuelle
 WCHAR szTitle[MAX_LOADSTRING];                  // Texte de la barre de titre

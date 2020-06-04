@@ -1,2 +1,2 @@
 Debut du programme : 
-[Error] : paintAll at time Sat Apr 18 12:52:57 2020
+[Error] : paintAll at time Thu Jun  4 13:19:47 2020
